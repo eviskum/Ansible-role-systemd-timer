@@ -1,0 +1,11 @@
+---
+
+- name: Set up present systemd timers
+  include_tasks: timers-present.yml
+  loop: "{{ timers }}"
+  when: item.state == "present"
+
+- name: Remove absent systemd timers
+  include_tasks: timers-absent.yml
+  loop: "{{ timers }}"
+  when: item.state == "absent"

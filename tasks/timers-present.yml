@@ -1,0 +1,27 @@
+---
+
+- name: Uploading service file
+  template:
+      src: service.j2
+      dest: "/etc/systemd/system/{{ item.name }}.service"
+      owner: root
+      group: root
+      mode: 0755
+  notify: Reload systemd
+
+- name: Uploading timer file
+  template:
+      src: timer.j2
+      dest: "/etc/systemd/system/{{ item.name }}.timer"
+      owner: root
+      group: root
+      mode: 0755
+  notify: Reload systemd
+
+- name: Enabling timers
+  systemd:
+    name: "{{ item.name }}.timer"
+    state: started
+    enabled: true
+    masked: false
+    daemon_reload: true

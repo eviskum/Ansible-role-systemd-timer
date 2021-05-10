@@ -1,0 +1,32 @@
+#
+# Managed by ansible
+# Role: systemd-timer
+#
+[Unit]
+Description={{ item.name }} Timer
+
+[Timer]
+Unit={{ item.name }}.service
+{% if item.timer_OnActiveSec is defined %}
+OnActiveSec={{ item.timer_OnActiveSec }}
+{% endif %}
+{% if item.timer_OnBootSec is defined %}
+OnBootSec={{ item.timer_OnBootSec }}
+{% endif %}
+{% if item.timer_OnStartupSec is defined %}
+OnStartupSec={{ item.timer_OnStartupSec }}
+{% endif %}
+{% if item.timer_OnUnitActiveSec is defined %}
+OnUnitActiveSec={{ item.timer_OnUnitActiveSec }}
+{% endif %}
+{% if item.timer_OnUnitInactiveSec is defined %}
+OnUnitInactiveSec={{ item.timer_OnUnitInactiveSec }}
+{% endif %}
+{% if item.timer_OnCalendar is defined %}
+OnCalendar={{ item.timer_OnCalendar }}
+Persistent={{ item.timer_persistent | default('false') }}
+{% endif %}
+AccuracySec={{ item.timer_AccuracySec | default('15s') }}
+
+[Install]
+WantedBy=timers.target

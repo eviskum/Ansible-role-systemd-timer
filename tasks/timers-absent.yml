@@ -1,0 +1,45 @@
+---
+
+- name: Disable timers
+  systemd:
+    name: "{{ item.name }}.timer"
+    state: stopped
+    enabled: false
+    masked: false
+  ignore_errors: yes
+
+- name: Delete service file
+  file:
+      path: "/etc/systemd/system/{{ item.name }}.service"
+      state: absent
+  notify:
+    - Reload systemd
+    - Reset systemd
+
+- name: Delete timer file
+  file:
+      path: "/etc/systemd/system/{{ item.name }}.timer"
+      state: absent
+  notify:
+    - Reload systemd
+    - Reset systemd
+
+- name: Delete timer symlink
+  file:
+      path: "/etc/systemd/system/timers.target.wants/{{ item.name }}.timer"
+      state: absent
+  notify:
+    - Reload systemd
+    - Reset systemd
+
+  
+# systemctl stop [servicename]
+# chkconfig [servicename] off OR for newer systems systemctl disable [servicename]
+# rm /etc/systemd/system/[servicename]
+# rm /etc/systemd/system/[servicename] # and symlinks that might be related
+# rm /usr/lib/systemd/system/[servicename] 
+# rm /usr/lib/systemd/system/[servicename] # and symlinks that might be related
+# systemctl daemon-reload
+# systemctl reset-failed
+
+# /bin/bash -c '(cd ~/vagrant/ns && vagrant provision --provision-with "letsencrypt")'
